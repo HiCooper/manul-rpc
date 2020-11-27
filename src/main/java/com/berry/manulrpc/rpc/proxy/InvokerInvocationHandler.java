@@ -1,6 +1,7 @@
 package com.berry.manulrpc.rpc.proxy;
 
 import com.berry.manulrpc.rpc.Invoker;
+import com.berry.manulrpc.rpc.RpcException;
 import com.berry.manulrpc.rpc.RpcInvocation;
 
 import java.io.ObjectInputStream;
@@ -44,22 +45,18 @@ public class InvokerInvocationHandler implements InvocationHandler {
             return invoker.equals(args[0]);
         }
 
+        // 构建请求传输对象
+        RpcInvocation rpcInvocation = new RpcInvocation(method, invoker.getType().getName(), args);
+
+        // 发起调用
         Socket socket = null;
         ObjectOutputStream output = null;
         ObjectInputStream input = null;
         try {
             socket = new Socket();
             socket.connect(new InetSocketAddress(6666));
-
-            RpcInvocation rpcInvocation = new RpcInvocation();
-            rpcInvocation.setServiceName(invoker.getType().getName());
-            rpcInvocation.setArguments(args);
-            rpcInvocation.setMethodName(methodName);
-            rpcInvocation.setParameterTypes(parameterTypes);
-
             output = new ObjectOutputStream(socket.getOutputStream());
             output.writeObject(rpcInvocation);
-
             input = new ObjectInputStream(socket.getInputStream());
             return input.readObject();
         } finally {
