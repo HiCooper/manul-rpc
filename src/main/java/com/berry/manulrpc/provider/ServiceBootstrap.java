@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Berry_Cooper.
  * @date 2020/11/27
  * fileName：ServiceBootstrap
- * Use：ALL 框架做的事，将服务注册，开始监听请求
+ * Use：ALL 框架做的事，将服务注册，开始监听请求，根据请求调用的方法 在 注册中心找到对应的服务 -> invoke
  */
 public class ServiceBootstrap {
     private static final Logger logger = LoggerFactory.getLogger(ServiceBootstrap.class);

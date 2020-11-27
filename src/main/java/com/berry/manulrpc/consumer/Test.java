@@ -16,7 +16,7 @@ public class Test {
 
     private static final ICalculator calculator;
 
-    // 框架需要做的事
+    // 框架需要做的事：在注册中心 找到 ICalculator 的服务提供方，生成代理类，在调用 ICalculator 方法时，将请求发送到 远程服务，并解析响应
     static {
         ProxyFactory factory = new ProxyFactory();
         Invoker<ICalculator> invoker = new Invoker<>(ICalculator.class);
