@@ -19,6 +19,9 @@ dependencies {
     compile("ch.qos.logback:logback-classic:1.2.3")
     compile("ch.qos.logback:logback-access:1.2.3")
 
+    // https://mvnrepository.com/artifact/io.netty/netty-all
+    compile group: 'io.netty', name: 'netty-all', version: '4.1.54.Final'
+
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
