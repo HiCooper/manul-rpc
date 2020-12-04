@@ -1,4 +1,4 @@
-package com.berry.manulrpc.rpc.remoting;
+package com.berry.manulrpc.rpc.remoting.client;
 
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;

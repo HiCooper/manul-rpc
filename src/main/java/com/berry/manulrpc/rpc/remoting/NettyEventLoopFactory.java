@@ -17,6 +17,7 @@
 package com.berry.manulrpc.rpc.remoting;
 
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.epoll.EpollSocketChannel;
@@ -46,12 +47,7 @@ public class NettyEventLoopFactory {
     }
 
     private static boolean shouldEpoll() {
-//        Configuration configuration = ApplicationModel.getEnvironment().getConfiguration();
-//        if (configuration.getBoolean("netty.epoll.enable", false)) {
-//            String osName = configuration.getString("os.name");
-//            return osName.toLowerCase().contains("linux") && Epoll.isAvailable();
-//        }
-
-        return false;
+        String osName = System.getProperty("os.name");
+        return osName.toLowerCase().contains("linux") && Epoll.isAvailable();
     }
 }

@@ -1,8 +1,7 @@
-package com.berry.manulrpc.provider;
+package com.berry.manulrpc.rpc;
 
 import com.berry.manulrpc.api.ICalculator;
 import com.berry.manulrpc.provider.service.CalculatorImpl;
-import com.berry.manulrpc.rpc.RpcInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,8 +21,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * fileName：ServiceBootstrap
  * Use：ALL 框架做的事，将服务注册，开始监听请求，根据请求调用的方法 在 注册中心找到对应的服务 -> invoke
  */
-public class ServiceBootstrap {
-    private static final Logger logger = LoggerFactory.getLogger(ServiceBootstrap.class);
+public class ServiceBootstrapV1 {
+    private static final Logger logger = LoggerFactory.getLogger(ServiceBootstrapV1.class);
 
     private static final ConcurrentHashMap<String, Class<?>> serviceRegistry = new ConcurrentHashMap<>();
 

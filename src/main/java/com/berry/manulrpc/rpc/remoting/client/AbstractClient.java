@@ -1,4 +1,4 @@
-package com.berry.manulrpc.rpc.remoting;
+package com.berry.manulrpc.rpc.remoting.client;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

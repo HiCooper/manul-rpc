@@ -48,6 +48,8 @@ public class InvokerInvocationHandler implements InvocationHandler {
         // 构建请求传输对象
         RpcInvocation rpcInvocation = new RpcInvocation(method, invoker.getType().getName(), args);
 
+        // socket v1
+        // todo 用 netty 连接 服务端
         // 发起调用
         Socket socket = null;
         ObjectOutputStream output = null;

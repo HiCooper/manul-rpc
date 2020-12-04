@@ -12,3 +12,7 @@
 for consumer：扫描 consumer 声明使用的 RPC 接口，生成其代理类
 
 for provider：扫描 provider 声明实现的 RPC 服务，注册到注册中心
+
+
+### 2020-12-04 update
+native socket -> netty
