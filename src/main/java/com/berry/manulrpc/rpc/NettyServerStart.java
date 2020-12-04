@@ -16,15 +16,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * Use：
  */
 public class NettyServerStart {
-    private static final ConcurrentHashMap<String, Class<?>> serviceRegistry = new ConcurrentHashMap<>();
-
-    public static void register(Class<?> serviceInterface, Class<?> impl) {
-        serviceRegistry.put(serviceInterface.getName(), impl);
-    }
 
     public static void main(String[] args) {
-        register(ICalculator.class, CalculatorImpl.class);
-        new NettyServer(serviceRegistry);
+        new NettyServer();
     }
 
 }

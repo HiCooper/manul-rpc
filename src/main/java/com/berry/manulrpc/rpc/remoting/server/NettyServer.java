@@ -48,11 +48,8 @@ public class NettyServer extends AbstractServer {
 
     private static final int DEFAULT_IO_THREADS = Math.min(Runtime.getRuntime().availableProcessors() + 1, 32);
 
-    private ConcurrentHashMap<String, Class<?>> serviceRegistry = new ConcurrentHashMap<>();
-
-    public NettyServer(ConcurrentHashMap<String, Class<?>> serviceRegistry ) {
+    public NettyServer() {
         super();
-        this.serviceRegistry = serviceRegistry;
     }
 
     @Override
@@ -64,7 +61,7 @@ public class NettyServer extends AbstractServer {
         // 处理IO的工作线程池
         workerGroup = NettyEventLoopFactory.eventLoopGroup(DEFAULT_IO_THREADS, "NettyServerWorker");
 
-        final NettyServerHandler nettyServerHandler = new NettyServerHandler(serviceRegistry);
+        final NettyServerHandler nettyServerHandler = new NettyServerHandler();
         channels = nettyServerHandler.getChannels();
 
         bootstrap.group(bossGroup, workerGroup)
