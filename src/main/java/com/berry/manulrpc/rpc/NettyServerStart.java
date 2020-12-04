@@ -1,10 +1,6 @@
 package com.berry.manulrpc.rpc;
 
-import com.berry.manulrpc.api.ICalculator;
-import com.berry.manulrpc.provider.service.CalculatorImpl;
 import com.berry.manulrpc.rpc.remoting.server.NettyServer;
-
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NettyServerStart {
 
     public static void main(String[] args) {
-        new NettyServer();
+        new NettyServer().holdOn();
     }
 
 }

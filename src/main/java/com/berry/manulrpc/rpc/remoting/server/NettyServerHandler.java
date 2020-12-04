@@ -34,7 +34,6 @@ public class NettyServerHandler extends ChannelDuplexHandler {
         serviceRegistry.put(serviceInterface.getName(), impl);
     }
 
-
     /**
      * the cache for alive worker channel.
      * <ip:port, dubbo channel>
@@ -54,7 +53,7 @@ public class NettyServerHandler extends ChannelDuplexHandler {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        logger.info("channel read: {}", ctx.channel().id());
+        logger.info("channel: {} read: {}", ctx.channel().id(), msg);
         RpcInvocation rpcInvocation;
         if (msg instanceof RpcInvocation) {
             rpcInvocation = (RpcInvocation) msg;
@@ -83,7 +82,7 @@ public class NettyServerHandler extends ChannelDuplexHandler {
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-        logger.info("{}, write", ctx.channel().id());
+        logger.info("channel: {}, write: {}", ctx.channel().id(), msg);
     }
 
     @Override
@@ -93,7 +92,7 @@ public class NettyServerHandler extends ChannelDuplexHandler {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        logger.info("{}, exceptionCaught", ctx.channel().id());
+        logger.info("{}, exceptionCaught, cause： {}", ctx.channel().id(), cause);
     }
 
     public Map<String, Channel> getChannels() {

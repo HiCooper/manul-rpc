@@ -107,6 +107,16 @@ public class NettyServer extends AbstractServer {
         } catch (Throwable e) {
             logger.warn(e.getMessage(), e);
         }
+    }
 
+    /**
+     * just for main test
+     */
+    public void holdOn() {
+        try {
+            channel.closeFuture().sync();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

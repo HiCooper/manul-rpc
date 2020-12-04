@@ -22,31 +22,34 @@ public class NettyClientHandler extends ChannelDuplexHandler {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        logger.info("channel active: {}", ctx.channel().id());
 
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-
+        logger.info("channel inactive: {}", ctx.channel().id());
     }
+
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        logger.info("channel: {} read: {}", ctx.channel().id(), msg);
 
     }
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-
+        logger.info("channel: {}, write: {}", ctx.channel().id(), msg);
     }
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-
+        logger.info("{}, userEventTriggered", ctx.channel().id());
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-
+        logger.info("{}, exceptionCaught, cause： {}", ctx.channel().id(), cause);
     }
 }
