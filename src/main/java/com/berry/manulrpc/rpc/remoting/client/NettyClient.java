@@ -73,7 +73,6 @@ public class NettyClient extends AbstractClient {
             protected void initChannel(SocketChannel ch) throws Exception {
                 NettyCodecAdapter adapter = new NettyCodecAdapter();
                 ch.pipeline()
-                        .addLast("framer", new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()))
                         .addLast("decoder", adapter.getDecoder())
                         .addLast("encode", adapter.getEncoder())
                         .addLast("client-idle-handler", new IdleStateHandler(10 * 1000, 0, 0, MILLISECONDS))
