@@ -1,5 +1,6 @@
 package com.berry.manulrpc.rpc.remoting.server;
 
+import com.alibaba.fastjson.JSON;
 import com.berry.manulrpc.api.ICalculator;
 import com.berry.manulrpc.provider.service.CalculatorImpl;
 import com.berry.manulrpc.rpc.RpcInvocation;
@@ -42,8 +43,9 @@ public class NettyServerHandler extends ChannelDuplexHandler {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        logger.info("channel active: {}", ctx.channel().id());
-
+        Channel income = ctx.channel();
+        logger.info("channel active: {}", income.id());
+        income.writeAndFlush("hello " + income.id() + ", welcome!\n");
     }
 
     @Override
@@ -54,14 +56,9 @@ public class NettyServerHandler extends ChannelDuplexHandler {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         logger.info("channel: {} read: {}", ctx.channel().id(), msg);
-        RpcInvocation rpcInvocation;
-        if (msg instanceof RpcInvocation) {
-            rpcInvocation = (RpcInvocation) msg;
-            System.out.println(rpcInvocation.toString());
-        } else {
-            logger.error("params  not support");
-            return;
-        }
+
+        RpcInvocation rpcInvocation =  JSON.parseObject((String) msg, RpcInvocation.class);
+
         Channel channel = ctx.channel();
 
         String serviceName = rpcInvocation.getServiceName();
@@ -77,7 +74,8 @@ public class NettyServerHandler extends ChannelDuplexHandler {
         Method method = serviceClass.getMethod(methodName, parameterTypes);
         Object result = method.invoke(serviceClass.newInstance(), arguments);
 
-        channel.writeAndFlush(result);
+        String res = result.toString() + "\n";
+        channel.writeAndFlush(res);
     }
 
     @Override

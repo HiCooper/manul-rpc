@@ -9,6 +9,8 @@ import io.netty.channel.*;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.Delimiters;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,8 +79,9 @@ public class NettyServer extends AbstractServer {
                     protected void initChannel(SocketChannel ch) throws Exception {
                         NettyCodecAdapter adapter = new NettyCodecAdapter();
                         ch.pipeline()
-                                .addLast("decoder", adapter.getDecoder())
-                                .addLast("encoder", adapter.getEncoder())
+                                .addLast("framer", new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()))
+                                .addLast("decoder", new StringDecoder())
+                                .addLast("encoder",new StringEncoder())
                                 .addLast("server-idle-handler", new IdleStateHandler(0, 0, 10 * 1000, MILLISECONDS))
                                 .addLast("handler", nettyServerHandler);
                     }

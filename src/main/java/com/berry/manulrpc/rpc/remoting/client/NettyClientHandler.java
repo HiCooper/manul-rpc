@@ -35,7 +35,7 @@ public class NettyClientHandler extends ChannelDuplexHandler {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         logger.info("channel: {} read: {}", ctx.channel().id(), msg);
-
+        // todo msg handler
     }
 
     @Override
@@ -66,6 +66,6 @@ public class NettyClientHandler extends ChannelDuplexHandler {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        logger.info("{}, exceptionCaught, cause： {}", ctx.channel().id(), cause);
+        logger.info("{}, exceptionCaught, cause： ", ctx.channel().id(), cause);
     }
 }

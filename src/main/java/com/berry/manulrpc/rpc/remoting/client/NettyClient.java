@@ -1,17 +1,16 @@
 package com.berry.manulrpc.rpc.remoting.client;
 
+import com.alibaba.fastjson.JSON;
 import com.berry.manulrpc.rpc.AppResponse;
 import com.berry.manulrpc.rpc.remoting.NettyCodecAdapter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.Delimiters;
-import io.netty.handler.proxy.Socks5ProxyHandler;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,7 @@ public class NettyClient extends AbstractClient {
 
     private static final int DEFAULT_IO_THREADS = Math.min(Runtime.getRuntime().availableProcessors() + 1, 32);
 
-    private static final String DEFAULT_SOCKS_PROXY_PORT = "8888";
+    private static final String DEFAULT_SOCKS_PROXY_PORT = "1080";
 
     private Bootstrap bootstrap;
 
@@ -73,14 +72,15 @@ public class NettyClient extends AbstractClient {
             protected void initChannel(SocketChannel ch) throws Exception {
                 NettyCodecAdapter adapter = new NettyCodecAdapter();
                 ch.pipeline()
-                        .addLast("decoder", adapter.getDecoder())
-                        .addLast("encode", adapter.getEncoder())
+                        .addLast("framer", new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()))
+                        .addLast("decoder", new StringDecoder())
+                        .addLast("encoder", new StringEncoder())
                         .addLast("client-idle-handler", new IdleStateHandler(10 * 1000, 0, 0, MILLISECONDS))
                         .addLast("handler", nettyClientHandler);
-                String socksProxyHost = "localhost";
-                int socksProxyPort = Integer.parseInt(DEFAULT_SOCKS_PROXY_PORT);
-                Socks5ProxyHandler socks5ProxyHandler = new Socks5ProxyHandler(new InetSocketAddress(socksProxyHost, socksProxyPort));
-                ch.pipeline().addFirst(socks5ProxyHandler);
+//                String socksProxyHost = "localhost";
+//                int socksProxyPort = Integer.parseInt(DEFAULT_SOCKS_PROXY_PORT);
+//                Socks5ProxyHandler socks5ProxyHandler = new Socks5ProxyHandler(new InetSocketAddress(socksProxyHost, socksProxyPort));
+//                ch.pipeline().addFirst(socks5ProxyHandler);
             }
         });
     }
@@ -132,8 +132,13 @@ public class NettyClient extends AbstractClient {
     }
 
     public CompletableFuture<Object> send(Object msg) {
-        channel.writeAndFlush(msg);
-        // todo get response
+        channel.writeAndFlush(JSON.toJSONString(msg) + "\n");
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        // todo get response ，与 NettyClientHandler -》 channelRead 联通
         // mock
         return CompletableFuture.supplyAsync(() -> {
             AppResponse response = new AppResponse();
