@@ -1,16 +1,23 @@
 package com.berry.manulrpc.rpc.remoting.client;
 
+import com.berry.manulrpc.rpc.AppResponse;
 import com.berry.manulrpc.rpc.remoting.NettyCodecAdapter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.Delimiters;
 import io.netty.handler.proxy.Socks5ProxyHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.CompletableFuture;
 
 import static com.berry.manulrpc.rpc.remoting.NettyEventLoopFactory.eventLoopGroup;
 import static com.berry.manulrpc.rpc.remoting.NettyEventLoopFactory.socketChannelClass;
@@ -30,7 +37,7 @@ public class NettyClient extends AbstractClient {
 
     private static final int DEFAULT_IO_THREADS = Math.min(Runtime.getRuntime().availableProcessors() + 1, 32);
 
-    private static final String DEFAULT_SOCKS_PROXY_PORT = "1080";
+    private static final String DEFAULT_SOCKS_PROXY_PORT = "8888";
 
     private Bootstrap bootstrap;
 
@@ -66,6 +73,7 @@ public class NettyClient extends AbstractClient {
             protected void initChannel(SocketChannel ch) throws Exception {
                 NettyCodecAdapter adapter = new NettyCodecAdapter();
                 ch.pipeline()
+                        .addLast("framer", new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()))
                         .addLast("decoder", adapter.getDecoder())
                         .addLast("encode", adapter.getEncoder())
                         .addLast("client-idle-handler", new IdleStateHandler(10 * 1000, 0, 0, MILLISECONDS))
@@ -124,8 +132,15 @@ public class NettyClient extends AbstractClient {
         }
     }
 
-    public void send(Object msg) {
+    public CompletableFuture<Object> send(Object msg) {
         channel.writeAndFlush(msg);
+        // todo get response
+        // mock
+        return CompletableFuture.supplyAsync(() -> {
+            AppResponse response = new AppResponse();
+            response.setResult(2);
+            return response;
+        });
     }
 
     public boolean isClosed() {

@@ -44,6 +44,7 @@ public final class NettyCodecAdapter {
         @Override
         protected void decode(ChannelHandlerContext ctx, Object msg, List out) throws Exception {
             logger.info("********************* 拆包 *********************");
+
         }
     }
 }

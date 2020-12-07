@@ -40,7 +40,23 @@ public class NettyClientHandler extends ChannelDuplexHandler {
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
+        super.write(ctx, msg, promise);
         logger.info("channel: {}, write: {}", ctx.channel().id(), msg);
+
+        promise.addListener(future -> {
+            if (future.isSuccess()) {
+                // if our future is success, mark the future to sent.
+//                handler.sent(channel, msg);
+                return;
+            }
+
+            Throwable t = future.cause();
+//            if (t != null && isRequest) {
+//                Request request = (Request) msg;
+//                Response response = buildErrorResponse(request, t);
+//                handler.received(channel, response);
+//            }
+        });
     }
 
     @Override

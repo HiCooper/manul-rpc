@@ -82,6 +82,7 @@ public class NettyServerHandler extends ChannelDuplexHandler {
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
+        super.write(ctx, msg, promise);
         logger.info("channel: {}, write: {}", ctx.channel().id(), msg);
     }
 
@@ -92,7 +93,7 @@ public class NettyServerHandler extends ChannelDuplexHandler {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        logger.info("{}, exceptionCaught, cause： {}", ctx.channel().id(), cause);
+        logger.info("{}, exceptionCaught, cause：", ctx.channel().id(), cause);
     }
 
     public Map<String, Channel> getChannels() {

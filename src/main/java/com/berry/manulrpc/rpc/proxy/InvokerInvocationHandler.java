@@ -48,29 +48,30 @@ public class InvokerInvocationHandler implements InvocationHandler {
         // 构建请求传输对象
         RpcInvocation rpcInvocation = new RpcInvocation(method, invoker.getType().getName(), args);
 
+        return invoker.invoke(rpcInvocation).recreate();
+
         // socket v1
-        // todo 用 netty 连接 服务端， 发起调用请求，返回远程相应
         // 发起调用
-        Socket socket = null;
-        ObjectOutputStream output = null;
-        ObjectInputStream input = null;
-        try {
-            socket = new Socket();
-            socket.connect(new InetSocketAddress(6666));
-            output = new ObjectOutputStream(socket.getOutputStream());
-            output.writeObject(rpcInvocation);
-            input = new ObjectInputStream(socket.getInputStream());
-            return input.readObject();
-        } finally {
-            if (socket != null) {
-                socket.close();
-            }
-            if (output != null) {
-                output.close();
-            }
-            if (input != null) {
-                input.close();
-            }
-        }
+//        Socket socket = null;
+//        ObjectOutputStream output = null;
+//        ObjectInputStream input = null;
+//        try {
+//            socket = new Socket();
+//            socket.connect(new InetSocketAddress(6666));
+//            output = new ObjectOutputStream(socket.getOutputStream());
+//            output.writeObject(rpcInvocation);
+//            input = new ObjectInputStream(socket.getInputStream());
+//            return input.readObject();
+//        } finally {
+//            if (socket != null) {
+//                socket.close();
+//            }
+//            if (output != null) {
+//                output.close();
+//            }
+//            if (input != null) {
+//                input.close();
+//            }
+//        }
     }
 }

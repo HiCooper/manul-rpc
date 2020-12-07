@@ -15,7 +15,7 @@ import java.lang.reflect.Type;
  * Use：
  */
 @Data
-public class RpcInvocation implements Serializable {
+public class RpcInvocation implements Invocation, Serializable {
 
     private String serviceName;
 
