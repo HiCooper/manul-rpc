@@ -25,7 +25,6 @@ public class NettyClientHandler extends ChannelDuplexHandler {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         logger.info("channel active: {}", ctx.channel().id());
-
     }
 
     @Override
@@ -37,8 +36,8 @@ public class NettyClientHandler extends ChannelDuplexHandler {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         logger.info("channel: {} read: {}", ctx.channel().id(), msg);
-        // ignore return msg type check
-        Integer result ;
+        // ignore return msg type check ，这里只是为了校验 calculate 计算 返回，实际需要包装返回类
+        int result ;
         try {
             result = Integer.parseInt(msg.toString());
         } catch (Exception e) {
@@ -71,6 +70,7 @@ public class NettyClientHandler extends ChannelDuplexHandler {
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         logger.info("{}, userEventTriggered", ctx.channel().id());
+        // todo 心跳检测这里做
     }
 
     @Override

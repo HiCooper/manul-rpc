@@ -26,16 +26,9 @@ public class DefaultFuture extends CompletableFuture<Object> {
 
     private static final Map<Long, DefaultFuture> FUTURES = new ConcurrentHashMap<>();
 
-    /**
-     *  invoke id.
-     */
-    private final Long id;
-
-    private final Channel channel;
-
     private DefaultFuture(Channel channel) {
-        this.channel = channel;
-        this.id = 111L;
+        // todo id 临时设置，需要包装一个 Request ，每个request 包含一个唯一ID
+        long id = 111L;
         // put into waiting map.
         FUTURES.put(id, this);
         CHANNELS.put(id, channel);
