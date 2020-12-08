@@ -20,6 +20,12 @@ public class AppResponse implements Result {
 
     private Throwable exception;
 
+    public AppResponse(){}
+
+    public AppResponse(Object result) {
+        this.result = result;
+    }
+
     @Override
     public Object recreate() throws Throwable {
         if (exception != null) {
@@ -42,5 +48,9 @@ public class AppResponse implements Result {
             throw exception;
         }
         return result;
+    }
+
+    public void setValue(Object value) {
+        this.result = value;
     }
 }

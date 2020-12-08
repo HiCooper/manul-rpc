@@ -24,6 +24,7 @@ public class Test {
     }
 
     public static void main(String[] args) {
-        System.out.println("add: " + calculator.add(1, 2));
+        int add = calculator.add(1, 2);
+        System.out.println("add: " + add);
     }
 }

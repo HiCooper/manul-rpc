@@ -1,5 +1,7 @@
 package com.berry.manulrpc.rpc.remoting.client;
 
+import com.berry.manulrpc.rpc.AppResponse;
+import com.berry.manulrpc.rpc.remoting.DefaultFuture;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -35,7 +37,14 @@ public class NettyClientHandler extends ChannelDuplexHandler {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         logger.info("channel: {} read: {}", ctx.channel().id(), msg);
-        // todo msg handler
+        // ignore return msg type check
+        Integer result ;
+        try {
+            result = Integer.parseInt(msg.toString());
+        } catch (Exception e) {
+            return;
+        }
+        DefaultFuture.received(ctx.channel(), new AppResponse(result));
     }
 
     @Override

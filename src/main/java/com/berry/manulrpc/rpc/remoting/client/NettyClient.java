@@ -2,6 +2,7 @@ package com.berry.manulrpc.rpc.remoting.client;
 
 import com.alibaba.fastjson.JSON;
 import com.berry.manulrpc.rpc.AppResponse;
+import com.berry.manulrpc.rpc.remoting.DefaultFuture;
 import com.berry.manulrpc.rpc.remoting.NettyCodecAdapter;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
+import java.rmi.RemoteException;
 import java.util.concurrent.CompletableFuture;
 
 import static com.berry.manulrpc.rpc.remoting.NettyEventLoopFactory.eventLoopGroup;
@@ -132,19 +134,18 @@ public class NettyClient extends AbstractClient {
     }
 
     public CompletableFuture<Object> send(Object msg) {
-        channel.writeAndFlush(JSON.toJSONString(msg) + "\n");
+        // 包装一个 与 channel 关联的 CompletableFuture， 在 NettyClientHandler channelRead 的时候 将 msg 写到 对应的 CompletableFuture 的 body
+        DefaultFuture defaultFuture = DefaultFuture.newFuture(channel);
+
         try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            // ignore writeAndFlush 异常处理(包括超时)
+            channel.writeAndFlush(JSON.toJSONString(msg) + "\n");
+        } catch (Exception e) {
+            defaultFuture.cancel();
+            throw e;
         }
-        // todo get response ，与 NettyClientHandler -》 channelRead 联通
         // mock
-        return CompletableFuture.supplyAsync(() -> {
-            AppResponse response = new AppResponse();
-            response.setResult(2);
-            return response;
-        });
+        return defaultFuture;
     }
 
     public boolean isClosed() {

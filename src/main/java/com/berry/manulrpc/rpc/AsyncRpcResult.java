@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,17 +32,46 @@ public class AsyncRpcResult implements Result {
         return getAppResponse().recreate();
     }
 
-    public Result getAppResponse() {
+    public Invocation getInvocation() {
+        return invocation;
+    }
+
+    public void setInvocation(Invocation invocation) {
+        this.invocation = invocation;
+    }
+
+    public CompletableFuture<AppResponse> getResponseFuture() {
+        return responseFuture;
+    }
+
+    public void setResponseFuture(CompletableFuture<AppResponse> responseFuture) {
+        this.responseFuture = responseFuture;
+    }
+
+    public void setValue(Object value) {
         try {
             if (responseFuture.isDone()) {
-                return responseFuture.get();
+                responseFuture.get().setValue(value);
+            } else {
+                AppResponse appResponse = new AppResponse();
+                appResponse.setValue(value);
+                responseFuture.complete(appResponse);
             }
         } catch (Exception e) {
             // This should not happen in normal request process;
             logger.error("Got exception when trying to fetch the underlying result from AsyncRpcResult.");
             throw new RpcException(e);
         }
-        return new AppResponse();
+    }
+
+    public Result getAppResponse() {
+        try {
+            return responseFuture.get();
+        } catch (Exception e) {
+            // This should not happen in normal request process;
+            logger.error("Got exception when trying to fetch the underlying result from AsyncRpcResult.");
+            throw new RpcException(e);
+        }
     }
 
     public static AsyncRpcResult newDefaultAsyncResult(Object value, Throwable throwable, Invocation invocation) {
