@@ -25,12 +25,20 @@ public class NettyServerHandler extends ChannelDuplexHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyServerHandler.class);
 
+    /**
+     * 模拟服务注册中心
+     */
     private static ConcurrentHashMap<String, Class<?>> serviceRegistry = new ConcurrentHashMap<>();
 
     public NettyServerHandler() {
         register(ICalculator.class, CalculatorImpl.class);
     }
 
+    /**
+     * 注册服务
+     * @param serviceInterface
+     * @param impl
+     */
     public static void register(Class<?> serviceInterface, Class<?> impl) {
         serviceRegistry.put(serviceInterface.getName(), impl);
     }
@@ -72,8 +80,10 @@ public class NettyServerHandler extends ChannelDuplexHandler {
         }
 
         Method method = serviceClass.getMethod(methodName, parameterTypes);
+        // todo serviceClass.newInstance() 可以缓存起来
         Object result = method.invoke(serviceClass.newInstance(), arguments);
 
+        // todo 返回类型的处理，如果是void方法调用，这里不需要再写result消息了
         String res = result.toString() + "\n";
         channel.writeAndFlush(res);
     }

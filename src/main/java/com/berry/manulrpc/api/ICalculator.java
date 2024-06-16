@@ -6,7 +6,7 @@ package com.berry.manulrpc.api;
  * @author Berry_Cooper.
  * @date 2020/11/27
  * fileName：ICalculator
- * Use：
+ * Use:
  */
 public interface ICalculator {
     int add(int a, int b);

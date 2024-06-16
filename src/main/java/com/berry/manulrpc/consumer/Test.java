@@ -9,14 +9,14 @@ import com.berry.manulrpc.rpc.ProxyFactory;
  *
  * @author Berry_Cooper.
  * @date 2020/11/27
- * fileNameï¼šTest
- * Useï¼š
+ * fileName£ºTest
+ * Use:
  */
 public class Test {
 
     private static final ICalculator calculator;
 
-    // æ¡†æ¶éœ€è¦åšçš„äº‹ï¼šåœ¨æ³¨å†Œä¸­å¿ƒ æ‰¾åˆ° ICalculator çš„æœåŠ¡æä¾›æ–¹ï¼Œç”Ÿæˆä»£ç†ç±»ï¼Œåœ¨è°ƒç”¨ ICalculator æ–¹æ³•æ—¶ï¼Œå°†è¯·æ±‚å‘é€åˆ° è¿œç¨‹æœåŠ¡ï¼Œå¹¶è§£æå“åº”
+    // ¿ò¼ÜĞèÒª×öµÄÊÂ£ºÔÚ×¢²áÖĞĞÄ ÕÒµ½ ICalculator µÄ·şÎñÌá¹©·½£¬Éú³É´úÀíÀà£¬ÔÚµ÷ÓÃ ICalculator ·½·¨Ê±£¬½«ÇëÇó·¢ËÍµ½ Ô¶³Ì·şÎñ£¬²¢½âÎöÏìÓ¦
     static {
         ProxyFactory factory = new ProxyFactory();
         Invoker<ICalculator> invoker = new Invoker<>(ICalculator.class);
