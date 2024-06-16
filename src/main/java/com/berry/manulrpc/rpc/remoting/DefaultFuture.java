@@ -22,13 +22,13 @@ public class DefaultFuture extends CompletableFuture<Object> {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultFuture.class);
 
-    private static final Map<Long, Channel> CHANNELS = new ConcurrentHashMap<>();
+    private static final Map<String, Channel> CHANNELS = new ConcurrentHashMap<>();
 
-    private static final Map<Long, DefaultFuture> FUTURES = new ConcurrentHashMap<>();
+    private static final Map<String, DefaultFuture> FUTURES = new ConcurrentHashMap<>();
 
     private DefaultFuture(Channel channel) {
-        // todo id 临时设置，需要包装一个 Request ，每个request 包含一个唯一ID
-        long id = 111L;
+        // 每个request 唯一ID
+        String id = channel.id().toString();
         // put into waiting map.
         FUTURES.put(id, this);
         CHANNELS.put(id, channel);
@@ -43,14 +43,15 @@ public class DefaultFuture extends CompletableFuture<Object> {
     }
 
     public static void received(Channel channel, AppResponse response) {
+        String id = channel.id().toString();
         try {
             // requestId temp set
-            DefaultFuture future = FUTURES.remove(111L);
+            DefaultFuture future = FUTURES.remove(id);
             if (future != null) {
                 future.doReceived(response);
             }
         }finally {
-            CHANNELS.remove(111L);
+            CHANNELS.remove(id);
         }
     }
 

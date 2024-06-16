@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.berry.manulrpc.rpc.AppResponse;
 import com.berry.manulrpc.rpc.RpcInvocation;
 import com.berry.manulrpc.rpc.remoting.DefaultFuture;
+import com.berry.manulrpc.rpc.util.DataConverter;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -11,8 +12,6 @@ import io.netty.channel.ChannelPromise;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
-import java.awt.List;
 import java.util.*;
 
 /**
@@ -47,7 +46,7 @@ public class NettyClientHandler extends ChannelDuplexHandler {
         logger.info("channel: {} read: {}", ctx.channel().id(), msg);
         Class<?> returnType = channelIdWithReturnTypeMap.get(ctx.channel().id().toString());
         // 返回数据类型转换
-        Object resultObj = parseResultToTargetReturnType(msg, returnType);
+        Object resultObj = DataConverter.parseResultToTargetReturnType(msg, returnType);
         DefaultFuture.received(ctx.channel(), new AppResponse(resultObj));
     }
 
@@ -84,46 +83,5 @@ public class NettyClientHandler extends ChannelDuplexHandler {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         logger.info("{}, exceptionCaught, cause： ", ctx.channel().id(), cause);
-    }
-
-
-    /**
-     * 数据类型转换
-     * @param msg
-     * @param returnType
-     * @return
-     */
-    private Object parseResultToTargetReturnType(Object msg, Class<?> returnType) {
-        if (returnType == String.class) {
-            return msg;
-        }
-        if (returnType == int.class || returnType == Integer.class) {
-            return Integer.parseInt(msg.toString());
-        }
-        if (returnType == long.class || returnType == Long.class) {
-            return Long.parseLong(msg.toString());
-        }
-        if (returnType == boolean.class || returnType == Boolean.class) {
-            return Boolean.parseBoolean(msg.toString());
-        }
-        if (returnType == double.class || returnType == Double.class) {
-            return Double.parseDouble(msg.toString());
-        }
-        if (returnType == float.class || returnType == Float.class) {
-            return Float.parseFloat(msg.toString());
-        }
-        if (returnType == byte.class || returnType == Byte.class) {
-            return Byte.parseByte(msg.toString());
-        }
-        if (returnType == short.class || returnType == Short.class) {
-            return Short.parseShort(msg.toString());
-        }
-        if (returnType == char.class || returnType == Character.class) {
-            return msg.toString().charAt(0);
-        }
-        if (returnType  == List.class || returnType == ArrayList.class) {
-            return JSON.parseArray(msg.toString(), returnType);
-        }
-        return msg;
     }
 }

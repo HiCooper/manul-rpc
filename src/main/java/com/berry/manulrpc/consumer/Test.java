@@ -26,5 +26,8 @@ public class Test {
     public static void main(String[] args) {
         int add = calculator.add(1, 2);
         System.out.println("add: " + add);
+
+        int add2 = calculator.add(2, 2);
+        System.out.println("add: " + add2);
     }
 }

@@ -53,7 +53,6 @@ public class NettyServerHandler extends ChannelDuplexHandler {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         Channel income = ctx.channel();
         logger.info("channel active: {}", income.id());
-        income.writeAndFlush("hello " + income.id() + ", welcome!\n");
     }
 
     @Override
